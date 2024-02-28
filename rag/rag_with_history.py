@@ -53,7 +53,6 @@ def generate_answer(prompt, conversation_id):
     messages = get_chat_history(conversation_id)
     messages.insert(0, system_intstruction)
     context = "\n".join(get_doc_azure_ai(prompt))
-    print(f"context: {context}")
     messages.append({"role": "user", "content": f"{context}\n{prompt}"})
 
     # retrieve answer
