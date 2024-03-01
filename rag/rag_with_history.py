@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
 from openai import AzureOpenAI
-from azure_ai_search import get_doc_azure_ai
+from rag.azure_ai_search import get_doc_azure_ai
 import tiktoken
 import json
-from cosmos_db import *
+from rag.cosmos_db import *
 import logging
 
 

@@ -15,4 +15,4 @@ class DefaultConfig:
 
     PORT = 3978
     APP_ID = os.getenv("MICROSOFT_APP_ID")
-    APP_PASSWORD = os.get("MICROSOFT_APP_PASSWORD")
+    APP_PASSWORD = os.getenv("MICROSOFT_APP_PASSWORD")

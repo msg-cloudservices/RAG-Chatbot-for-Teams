@@ -1,5 +1,7 @@
 import azure.cosmos.documents as documents
 import azure.cosmos.cosmos_client as cosmos_client
+from azure.core.exceptions import AzureError
+from azure.cosmos import CosmosClient, PartitionKey
 import azure.cosmos.exceptions as exceptions
 from azure.cosmos.partition_key import PartitionKey
 import os

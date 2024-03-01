@@ -3,6 +3,7 @@
 
 import sys
 import traceback
+import json
 import uuid
 from datetime import datetime
 from http import HTTPStatus
@@ -66,21 +67,20 @@ APP_ID = SETTINGS.app_id if SETTINGS.app_id else uuid.uuid4()
 # Create the Bot
 BOT = TeamsConversationBot(CONFIG.APP_ID, CONFIG.APP_PASSWORD)
 
+async def options(req: Request) -> Response:
+    return Response(status=HTTPStatus.OK, headers={"Allow": "POST"})
 
 # Listen for incoming requests on /api/messages.
 async def messages(req: Request) -> Response:
-    print("Triggered")
     # Main bot message handler.
     if "application/json" in req.headers["Content-Type"]:
-        print("1")
         body = await req.json()
+        print(body)
     else:
-        print("2")
         return Response(status=HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
 
     activity = Activity().deserialize(body)
     auth_header = req.headers["Authorization"] if "Authorization" in req.headers else ""
-
     response = await ADAPTER.process_activity(activity, auth_header, BOT.on_turn)
     if response:
         return json_response(data=response.body, status=response.status)
@@ -89,6 +89,7 @@ async def messages(req: Request) -> Response:
 
 APP = web.Application(middlewares=[aiohttp_error_middleware])
 APP.router.add_post("/api/messages", messages)
+# APP.router.add_options("/api/messages", options)
 
 if __name__ == "__main__":
     try:
