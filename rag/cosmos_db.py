@@ -13,7 +13,7 @@ import uuid
 load_dotenv()
 
 cosmos_db_host = os.getenv("COSMOS_DB_ACCOUNT_HOST")
-cosmos_db_master_key = os.getenv("COSMOS_DB_ACCOUNT_KEY")
+cosmos_db_master_key = os.getenv("COSMOS_DB_KEY")
 cosmos_db_database_id = os.environ.get("COSMOS_DATABASE")
 cosmos_db_container_id = os.environ.get("COSMOS_CONTAINER")
 

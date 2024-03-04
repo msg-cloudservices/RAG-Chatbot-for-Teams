@@ -75,7 +75,6 @@ async def messages(req: Request) -> Response:
     # Main bot message handler.
     if "application/json" in req.headers["Content-Type"]:
         body = await req.json()
-        print(body)
     else:
         return Response(status=HTTPStatus.UNSUPPORTED_MEDIA_TYPE)
 

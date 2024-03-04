@@ -33,7 +33,7 @@ class TeamsConversationBot(TeamsActivityHandler):
 
     async def on_message_activity(self, turn_context: TurnContext):
         TurnContext.remove_recipient_mention(turn_context.activity)
-        prompt = turn_context.activity.text.strip().lower()
+        prompt = turn_context.activity.text.strip()
         conversation_id = turn_context.activity.conversation.id
 
         response = generate_answer(prompt, conversation_id)
