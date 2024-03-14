@@ -22,9 +22,15 @@ client = AzureOpenAI(
     azure_endpoint=azure_endpoint, api_key=api_key, api_version="2023-05-15"
 )
 
-system_intstruction = {
+system_instruction = {
     "role": "system",
-    "content": "Am Anfang jeder Nachricht steht ein Kontext, den du verwendest, um deine Antworten zu erstellen. Dieser Kontext ist ein Auszug aus Dokumente, die Prozesse und Abläufe des NDR beschreiben. Du beantwortest hauptsächlich Fragen zu Abläufen von Prozessen mit Hilfe dieser Kontexte.",
+    "content": """Falls am Anfang einer Nachricht ein Kontext steht, versuche die Frage des Nutzers möglichst auf Basis des Kontextes zu beantworten.
+    Du bist höflich und sprichst den Nutzer immer mit 'Sie' an.""",
+}
+
+system_instruction_no_context = {
+    "role": "system",
+    "content": "Du bist höflich und sprichst den Nutzer immer mit 'Sie' an.",
 }
 
 
@@ -49,11 +55,20 @@ def get_chat_history(conversation_id):
 
 
 def generate_answer(prompt, conversation_id):
-    # create the messages array with chathistory and context from azure ai search
-    messages = get_chat_history(conversation_id)
-    messages.insert(0, system_intstruction)
-    context = "\n".join(get_doc_azure_ai(prompt))
-    messages.append({"role": "user", "content": f"{context}\n{prompt}"})
+    context = "\n".join(get_doc_azure_ai(prompt, similarity_threshold=0.8))
+
+    if context:
+        # create the messages array with chathistory and context from azure ai search
+        messages = get_chat_history(conversation_id)
+        messages.insert(0, system_instruction)
+        messages.append({"role": "user", "content": f"{context}\n{prompt}"})
+    else:
+        # create the messages array without any context
+        messages = get_chat_history(conversation_id)
+        messages.insert(0, system_instruction_no_context)
+        messages.append({"role": "user", "content": f"{prompt}"})
+
+    # print(messages)
 
     # retrieve answer
     response = client.chat.completions.create(

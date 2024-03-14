@@ -42,10 +42,6 @@ jsonpatch==1.33
 jsonpointer==2.4
 jsonschema==4.21.1
 jsonschema-specifications==2023.12.1
-# langchain==0.1.6
-# langchain-community==0.0.19
-# langchain-core==0.1.22
-# langchain-openai==0.0.5
 langsmith==0.0.87
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
@@ -82,7 +78,6 @@ PyPDF2==3.0.1
 python-dateutil==2.8.2
 python-dotenv==1.0.1
 pytz==2024.1
-pywin32==306
 PyYAML==6.0.1
 pyzmq==25.1.2
 referencing==0.33.0

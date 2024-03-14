@@ -67,9 +67,6 @@ APP_ID = SETTINGS.app_id if SETTINGS.app_id else uuid.uuid4()
 # Create the Bot
 BOT = TeamsConversationBot(CONFIG.APP_ID, CONFIG.APP_PASSWORD)
 
-async def options(req: Request) -> Response:
-    return Response(status=HTTPStatus.OK, headers={"Allow": "POST"})
-
 # Listen for incoming requests on /api/messages.
 async def messages(req: Request) -> Response:
     # Main bot message handler.
@@ -88,10 +85,9 @@ async def messages(req: Request) -> Response:
 
 APP = web.Application(middlewares=[aiohttp_error_middleware])
 APP.router.add_post("/api/messages", messages)
-# APP.router.add_options("/api/messages", options)
 
 if __name__ == "__main__":
     try:
-        web.run_app(APP, host="localhost", port=CONFIG.PORT)
+        web.run_app(APP, host="0.0.0.0", port=CONFIG.PORT)
     except Exception as error:
         raise error

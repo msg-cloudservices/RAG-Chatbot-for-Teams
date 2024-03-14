@@ -3,7 +3,7 @@
 # Licensed under the MIT License.
 from dotenv import load_dotenv
 
-load_dotenv
+load_dotenv()
 
 import os
 
@@ -14,5 +14,6 @@ class DefaultConfig:
     """ Bot Configuration """
 
     PORT = 3978
-    APP_ID = os.getenv("MICROSOFT_APP_ID")
-    APP_PASSWORD = os.getenv("MICROSOFT_APP_PASSWORD")
+    APP_ID = os.getenv("MICORSOFT_APP_IDD")
+    APP_PASSWORD = os.getenv("MICORSOFT_APP_PASSWORDD")
+    print(f"APP_ID: {APP_ID}; APP_PASSWORD: {APP_PASSWORD}")
