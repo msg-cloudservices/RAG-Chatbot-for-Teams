@@ -1,3 +1,6 @@
+appManifest/
+examples/
+
 # embedding outputs of scripts folder
 scripts/output
 data/
