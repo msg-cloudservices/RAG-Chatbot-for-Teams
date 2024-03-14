@@ -15,7 +15,7 @@ load_dotenv()
 api_key = os.getenv("AZURE_OPENAI_KEY")
 os.environ["OPENAI_API_KEY"] = api_key
 azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-deployment_name = "gpt"
+deployment_name = os.environ.get("CHAT_DEPLOYMENT_NAME")
 TOKEN_LIMIT = 4000
 
 client = AzureOpenAI(
@@ -66,13 +66,17 @@ def generate_answer(prompt, conversation_id):
         # create the messages array without any context
         messages = get_chat_history(conversation_id)
         messages.insert(0, system_instruction_no_context)
-        messages.append({"role": "user", "content": f"{prompt}"})
+        messages.append({"role": "user", "content": prompt})
 
-    # print(messages)
+    logging_item = json.dumps(messages)
+    start = 0
+    if len(logging_item) > 200:
+        start = len(logging_item) - 200
+    logging.info(logging_item[start:])
 
     # retrieve answer
     response = client.chat.completions.create(
-        model="gpt",
+        model=deployment_name,
         messages=messages,
         temperature=0.7,
         max_tokens=compute_tokens(messages),
