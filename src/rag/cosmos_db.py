@@ -5,17 +5,20 @@ from azure.cosmos import CosmosClient, PartitionKey
 import azure.cosmos.exceptions as exceptions
 from azure.cosmos.partition_key import PartitionKey
 import os
-from dotenv import load_dotenv
 import datetime
 import uuid
+import logging
 
+cosmos_db_host = os.environ.get("AZURE_COSMOS_DB_HOST")
+cosmos_db_master_key = os.environ.get("AZURE_COSMOS_DB_KEY")
+cosmos_db_database_id = os.environ.get("AZURE_COSMOS_DATABASE")
+cosmos_db_container_id = os.environ.get("AZURE_COSMOS_CONTAINER")
 
-load_dotenv()
-
-cosmos_db_host = os.getenv("AZURE_COSMOS_DB_HOST")
-cosmos_db_master_key = os.getenv("AZURE_COSMOS_DB_KEY")
-cosmos_db_database_id = os.getenv("AZURE_COSMOS_DATABASE")
-cosmos_db_container_id = os.getenv("AZURE_COSMOS_CONTAINER")
+logging.info(f"cosmos_db_host: {cosmos_db_host}")
+if cosmos_db_master_key:
+    logging.info(f"cosmos_db_master_key: {len(cosmos_db_master_key)}")
+logging.info(f"cosmos_db_database_id: {cosmos_db_database_id}")
+logging.info(f"cosmos_db_container_id: {cosmos_db_container_id}")
 
 
 # setup connection to Cosmos DB

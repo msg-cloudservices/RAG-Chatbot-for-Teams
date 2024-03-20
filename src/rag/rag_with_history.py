@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 from openai import AzureOpenAI
 from rag.azure_ai_search import get_doc_azure_ai
 import tiktoken
@@ -8,13 +7,9 @@ from rag.cosmos_db import *
 import logging
 
 
-load_dotenv()
-
-
 # importing Azure OpenAI creds
-api_key = os.getenv("AZURE_OPENAI_KEY")
-os.environ["OPENAI_API_KEY"] = api_key
-azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+api_key = os.environ.get("AZURE_OPENAI_KEY")
+azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 deployment_name = os.environ.get("CHAT_DEPLOYMENT_NAME")
 TOKEN_LIMIT = 4000
 
@@ -42,7 +37,7 @@ def compute_tokens(messages):
     else:
         return result
 
-        
+
 def get_chat_history(conversation_id):
     message_history = query_items(conversation_id)
     sorted_message_history = sorted(
@@ -72,7 +67,7 @@ def generate_answer(prompt, conversation_id):
     start = 0
     if len(logging_item) > 200:
         start = len(logging_item) - 200
-    logging.info(logging_item[start:])
+    logging.info(logging_item[start:], flush=True)
 
     # retrieve answer
     response = client.chat.completions.create(

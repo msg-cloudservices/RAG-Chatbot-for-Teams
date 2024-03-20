@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
-
+from config import DefaultConfig
 import sys
 import traceback
 import json
@@ -17,11 +17,11 @@ from botbuilder.core import (
 )
 from botbuilder.core.integration import aiohttp_error_middleware
 from botbuilder.schema import Activity, ActivityTypes
-
+import logging
 from bots import TeamsConversationBot
-from config import DefaultConfig
 
 CONFIG = DefaultConfig()
+logger = logging.getLogger()
 
 # Create adapter.
 # See https://aka.ms/about-bot-adapter to learn more about how bots work.
@@ -70,6 +70,7 @@ BOT = TeamsConversationBot(CONFIG.APP_ID, CONFIG.APP_PASSWORD)
 # Listen for incoming requests on /api/messages.
 async def messages(req: Request) -> Response:
     # Main bot message handler.
+    logging.info("Handling a POST request")
     if "application/json" in req.headers["Content-Type"]:
         body = await req.json()
     else:
@@ -82,12 +83,18 @@ async def messages(req: Request) -> Response:
         return json_response(data=response.body, status=response.status)
     return Response(status=HTTPStatus.OK)
 
+async def get(req: Request) -> Response:
+    logger.info("Get request handler")
+    print("Handlings starts")
+    return Response(status=HTTPStatus.OK)
 
-APP = web.Application(middlewares=[aiohttp_error_middleware])
-APP.router.add_post("/api/messages", messages)
+
+app = web.Application(middlewares=[aiohttp_error_middleware])
+app.router.add_post("/api/messages", messages)
+app.router.add_get("/", get)
 
 if __name__ == "__main__":
     try:
-        web.run_app(APP, host="0.0.0.0", port=CONFIG.PORT)
+        web.run_app(app, port=CONFIG.PORT)
     except Exception as error:
         raise error

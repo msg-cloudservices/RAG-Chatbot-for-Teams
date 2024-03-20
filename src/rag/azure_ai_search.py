@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 from openai import AzureOpenAI
 
 # from langchain_openai import AzureChatOpenAI
@@ -12,21 +11,25 @@ from azure.search.documents.models import (
     VectorizedQuery,
     VectorQuery,
 )
-
-load_dotenv()
+import logging
 
 #importing Azure OpenAI creds
-api_key = os.getenv("AZURE_OPENAI_KEY")
-os.environ["OPENAI_API_KEY"]= api_key
-azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-deployment_name=os.getenv("EMBEDDING_DEPLOYMENT_NAME")
+api_key = os.environ.get("AZURE_OPENAI_KEY")
+azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
+deployment_name=os.environ.get("EMBEDDING_DEPLOYMENT_NAME")
 
 #initiate AI Searchservice
-service_endpoint = os.getenv("AI_SEARCH_SERVICE_ENDPOINT")
-service_name = os.getenv("AI_SEARCH_NAME")
-cogkey = os.getenv("AI_SEARCH_ADMIN_KEY")
+service_endpoint = os.environ.get("AI_SEARCH_SERVICE_ENDPOINT")
+service_name = os.environ.get("AI_SEARCH_NAME")
+cogkey = os.environ.get("AI_SEARCH_ADMIN_KEY")
 credential = AzureKeyCredential(cogkey)
-index_name = os.getenv("AI_SEARCH_INDEX_NAME")
+index_name = os.environ.get("AI_SEARCH_INDEX_NAME")
+
+logging.info(f"service_endpoint: {service_endpoint}")
+logging.info(f"service_name: {service_name}")
+if cogkey:
+    logging.info(f"cogkey: {len(cogkey)}")
+logging.info(f"index_name: {index_name}")
 
 client = AzureOpenAI(
     azure_endpoint=azure_endpoint, api_key=api_key, api_version="2023-05-15"

@@ -1,16 +1,11 @@
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
 
-import os
-import json
-
-from typing import List
-from botbuilder.core import CardFactory, TurnContext, MessageFactory
-from botbuilder.core.teams import TeamsActivityHandler, TeamsInfo
-from botbuilder.schema import CardAction, HeroCard, Mention, ConversationParameters, Attachment, Activity
+from botbuilder.core import TurnContext, MessageFactory
+from botbuilder.core.teams import TeamsActivityHandler
 from botbuilder.schema.teams import TeamInfo, TeamsChannelAccount
-from botbuilder.schema._connector_client_enums import ActionTypes
 from rag.rag_with_history import generate_answer
+import logging
 
 ADAPTIVECARDTEMPLATE = "resources/UserMentionCardTemplate.json"
 
@@ -35,7 +30,8 @@ class TeamsConversationBot(TeamsActivityHandler):
         TurnContext.remove_recipient_mention(turn_context.activity)
         prompt = turn_context.activity.text.strip()
         conversation_id = turn_context.activity.conversation.id
-
+        logging.info(f"Prompt is: {prompt}")
+        
         response = generate_answer(prompt, conversation_id)
         await turn_context.send_activity(
             MessageFactory.text(response)
