@@ -48,13 +48,31 @@ def get_chat_history(conversation_id):
         for message in sorted_message_history
     ]
 
+def cut_tokenlength(conversation_id):    
+    messages= get_chat_history(conversation_id)
+    msg_json= json.dumps(messages)
+
+    #tokenize input
+    tokenizer = tiktoken.get_encoding("p50k_base")
+    tokenized_input= tokenizer.encode(msg_json)
+    
+    #calculate tokenlength
+    tokenlength=len(tokenized_input)
+
+    #adjust tokenlength by cutting first messages from history
+    if tokenlength > TOKEN_LIMIT-500:
+        offset= TOKEN_LIMIT-500
+        newmessages = messages[-offset:]
+        return newmessages
+    else:
+        return messages
 
 def generate_answer(prompt, conversation_id):
     context = "\n".join(get_doc_azure_ai(prompt, similarity_threshold=0.8))
 
     if context:
         # create the messages array with chathistory and context from azure ai search
-        messages = get_chat_history(conversation_id)
+        messages = cut_tokenlength(conversation_id)
         messages.insert(0, system_instruction)
         messages.append({"role": "user", "content": f"{context}\n{prompt}"})
     else:
