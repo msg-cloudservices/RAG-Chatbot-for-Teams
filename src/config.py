@@ -3,6 +3,9 @@
 # Licensed under the MIT License.
 import logging
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 """ Bot Configuration """

@@ -42,14 +42,27 @@ def query_items(conversation_id):
     return items
 
 
+def get_max_position(conversation_id):
+    items = list(
+        container.query_items(
+            query="SELECT * FROM r WHERE r.conversationId=@conversation_id ORDER BY r.position DESC OFFSET 0 LIMIT 1",
+            parameters=[{"name": "@conversation_id", "value": conversation_id}],
+        )
+    )
+    if items:
+        return items[0]["position"]
+    else:
+        return 0
+
+
 def create_items(item):
+    position = get_max_position(item.get("conversation_id")) + 1
     chat_message = {
         "id": str(uuid.uuid4()),
         "conversationId": item.get("conversation_id"),
         "role": item.get("role"),
         "content": item.get("content"),
         "timestamp": datetime.datetime.now().isoformat(),
-        "position": item.get("position") or 0,
+        "position": position,
     }
     container.create_item(body=chat_message)
-
