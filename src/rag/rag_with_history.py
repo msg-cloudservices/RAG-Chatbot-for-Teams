@@ -50,8 +50,6 @@ def get_chat_history(conversation_id):
 
 
 def cut_tokenlength(messages):
-    msg_json = json.dumps([message["content"] for message in messages])
-
     # tokenize input
     tokenizer = tiktoken.get_encoding("p50k_base")
     tokenized_messages = [
@@ -77,17 +75,12 @@ def generate_answer(prompt, conversation_id):
     context = "\n".join(get_doc_azure_ai(prompt, similarity_threshold=0.8))
 
     if context:
-        # create the messages array with chathistory and context from azure ai search
-        messages = get_chat_history(conversation_id)
-        messages = cut_tokenlength(messages)
-        messages.insert(0, system_instruction)
-        messages.append({"role": "user", "content": f"{context}\n{prompt}"})
-    else:
-        # create the messages array without any context
-        messages = get_chat_history(conversation_id)
-        messages = cut_tokenlength(messages)
-        messages.insert(0, system_instruction_no_context)
-        messages.append({"role": "user", "content": prompt})
+        prompt = f"{context}\n{prompt}"
+    # create the messages array without any context
+    messages = get_chat_history(conversation_id)
+    messages = cut_tokenlength(messages)
+    messages.insert(0, system_instruction_no_context)
+    messages.append({"role": "user", "content": prompt})
 
     logging_item = json.dumps(messages)
     start = 0
