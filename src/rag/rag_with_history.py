@@ -11,7 +11,8 @@ import logging
 api_key = os.environ.get("AZURE_OPENAI_KEY")
 azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 deployment_name = os.environ.get("CHAT_DEPLOYMENT_NAME")
-TOKEN_LIMIT = 4000
+TOKEN_LIMIT = os.environ.get("TOKEN_LIMIT", 16000)
+ANSWER_TOKENS = os.environ.get("ANSWER_TOKENS", 1000)
 
 client = AzureOpenAI(
     azure_endpoint=azure_endpoint, api_key=api_key, api_version="2023-05-15"
@@ -31,7 +32,10 @@ system_instruction_no_context = {
 
 def compute_tokens(messages):
     tokenizer = tiktoken.get_encoding("p50k_base")
-    result = TOKEN_LIMIT - len(tokenizer.encode(json.dumps(messages)))
+    sum_tokens = 0
+    for msg in messages:
+        sum_tokens += len(tokenizer.encode(msg["content"]))
+    result = TOKEN_LIMIT - sum_tokens
     if result < 0:
         return 0
     else:
@@ -64,7 +68,7 @@ def cut_tokenlength(messages):
     # adjust tokenlength by cutting first messages from history
     token_count = 0
     for message_length in tokenized_messages:
-        if tokenlength - token_count <= TOKEN_LIMIT - 500:
+        if tokenlength - token_count <= TOKEN_LIMIT - ANSWER_TOKENS:
             return messages
         token_count += message_length
         messages.pop(0)

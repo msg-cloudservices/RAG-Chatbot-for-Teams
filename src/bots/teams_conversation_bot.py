@@ -28,7 +28,15 @@ class TeamsConversationBot(TeamsActivityHandler):
 
     async def on_message_activity(self, turn_context: TurnContext):
         TurnContext.remove_recipient_mention(turn_context.activity)
-        prompt = turn_context.activity.text.strip()
+        try:
+            prompt = turn_context.activity.text.strip()
+        except Exception as e:
+            # No text attribute, e.g. if only emojis are sent
+            # TODO: Emoji handling
+            logging.warn(f"Could not read any text from received message. Error: {e}")
+            await turn_context.send_activity(MessageFactory.text("Hallo, wie kann ich weiterhelfen?"))
+            return
+
         conversation_id = turn_context.activity.conversation.id
         logging.info(f"Prompt is: {prompt}")
         
