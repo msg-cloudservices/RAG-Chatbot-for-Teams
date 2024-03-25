@@ -20,13 +20,13 @@ client = AzureOpenAI(
 
 system_instruction = {
     "role": "system",
-    "content": """Falls am Anfang einer Nachricht ein Kontext steht, versuche die Frage des Nutzers möglichst auf Basis des Kontextes zu beantworten.
-    Du bist höflich und sprichst den Nutzer immer mit 'Sie' an.""",
+    "content": """Falls am Anfang einer Nachricht ein Kontext steht, versuche die Frage der Nutzenden möglichst auf Basis des Kontextes zu beantworten.
+    Du bist höflich und sprichst die User:innen immer mit 'Sie' an.""",
 }
 
 system_instruction_no_context = {
     "role": "system",
-    "content": "Du bist höflich und sprichst den Nutzer immer mit 'Sie' an.",
+    "content": "Du bist höflich und sprichst die User:innen immer mit 'Sie' an.",
 }
 
 

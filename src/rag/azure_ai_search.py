@@ -13,6 +13,7 @@ from azure.search.documents.models import (
 )
 import logging
 
+
 #importing Azure OpenAI creds
 api_key = os.environ.get("AZURE_OPENAI_KEY")
 azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
