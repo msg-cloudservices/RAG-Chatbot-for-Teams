@@ -23,7 +23,7 @@ class TeamsConversationBot(TeamsActivityHandler):
         for member in teams_members_added:
             if member.id != turn_context.activity.recipient.id:
                 await turn_context.send_activity(
-                    f"Welcome to the team { member.given_name } { member.surname }. "
+                    f"Willkommen in der Chat Lounge { member.given_name } { member.surname }. "
                 )
 
     async def on_message_activity(self, turn_context: TurnContext):
