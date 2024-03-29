@@ -11,8 +11,8 @@ import logging
 api_key = os.environ.get("AZURE_OPENAI_KEY")
 azure_endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
 deployment_name = os.environ.get("CHAT_DEPLOYMENT_NAME")
-TOKEN_LIMIT = os.environ.get("TOKEN_LIMIT", 16000)
-ANSWER_TOKENS = os.environ.get("ANSWER_TOKENS", 1000)
+TOKEN_LIMIT = int(os.environ.get("TOKEN_LIMIT", 16000))
+ANSWER_TOKENS = int(os.environ.get("ANSWER_TOKENS", 1000))
 
 client = AzureOpenAI(
     azure_endpoint=azure_endpoint, api_key=api_key, api_version="2023-05-15"
