@@ -76,14 +76,19 @@ def cut_tokenlength(messages):
 
 
 def generate_answer(prompt, conversation_id):
+    # retrieve documents from azure AI
     context = "\n".join(get_doc_azure_ai(prompt, similarity_threshold=0.8))
 
-    if context:
-        prompt = f"{context}\n{prompt}"
-    # create the messages array without any context
+    # retrieve chat history and remove any messages exceeding the token limit
     messages = get_chat_history(conversation_id)
     messages = cut_tokenlength(messages)
-    messages.insert(0, system_instruction_no_context)
+
+    # construct messages array with system message, history and prompt
+    if context:
+        prompt = f"{context}\n{prompt}"
+        messages.insert(0, system_instruction)
+    else:
+        messages.insert(0, system_instruction_no_context)
     messages.append({"role": "user", "content": prompt})
 
     logging_item = json.dumps(messages)
